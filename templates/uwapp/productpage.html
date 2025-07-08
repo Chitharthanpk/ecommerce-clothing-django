@@ -1,0 +1,235 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<body>
+    <script>
+        AOS.init({ once: true, });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <section class="taskbar ">
+        <nav class="menu" data-aos="flip-left" data-aos-duration="2000">
+            <a href="{% url 'uwapp:index' %}"><img src="{% static 'img/undrwrld final logo-03.png' %}" alt="">
+            </a>
+        </nav>
+        <nav class="menu_2">
+            <a href="{% url 'userauth:login'  %}">Login</a>
+            <a href="{% url 'uwapp:cart' %}"><img src="{% static 'img/cart.png' %}" alt=""></a>
+            <a  href="{% url 'uwapp:account' %}"><img src="{% static 'img/user.png' %}" alt=""></a>
+            <!-- Toogle -->
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarDark" aria-controls="offcanvasNavbarDark">
+                <img src="{% static 'img/menu.png' %}" alt="">
+            </button>
+
+            <!--sider-->
+            <div class="sidebar offcanvas offcanvas-end text-white" tabindex="-1" id="offcanvasNavbarDark"
+                aria-labelledby="offcanvasNavbarDarkLabel">
+                <div class="offcanvas-header text-white border-bottom">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">UndrWorld</h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <!--SIder body-->
+                <div class="offcanvas-body d-flex flex-column p-4">
+                    <ul class="navbar-nav justify-content-center align-items-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'uwapp:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:account' %}">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:category' %}">Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:product' %}">All Products</a>
+                        </li>
+                    </ul>
+                    <!--Log in / Signup-->
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                        <a href="{% url 'userauth:login'  %}">Login</a>
+                        <a href="{% url 'userauth:signup' %}" class="btn btn-primary">Signup</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section class="product_page">
+
+        <div class="product_img" data-aos="fade-up" data-aos-duration="1500">
+            <div class="inner-2">
+                <img src="{{ p.image.url }}" alt="" id="ProductImg">
+            </div>
+
+            <div class="col_img">
+                {% for p in p_image %}
+                <div class="sml_img">
+                    <img src="{{ p.images.url }}" alt="" class="SmallImg">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="product_details" data-aos="fade-up" data-aos-duration="1500" style="overflow-x: hidden;">
+            <div>
+                <p id="prd-name"> </p>
+                <h1>{{p.name}}</h1>
+                <p>Rs.<span class="current-product-price">{{p.price}}</span></p>
+            </div>
+
+
+            <div class="size-selection mt-3">
+                <label>Select Size:</label>
+                <div class="" data-toggle="buttons">
+                    <label style="height: 4em;width: 3em;letter-spacing: 0;"
+                        class="btn btn-secondary {% if not p.small_in_stock %}disabled{% endif %}">
+                        <input type="radio" name="size" id="sizeSmall" value="Small" data-size="small"
+                            autocomplete="off"> S
+                    </label>
+                    <label style="height: 4em;width: 3em;letter-spacing: 0;"
+                        class="btn btn-secondary {% if not p.medium_in_stock %}disabled{% endif %}">
+                        <input type="radio" name="size" id="sizeMedium" value="Medium" data-size="medium"
+                            autocomplete="off"> M
+                    </label>
+                    <label style="height: 4em;width: 3em;letter-spacing: 0;"
+                        class="btn btn-secondary {% if not p.large_in_stock %}disabled{% endif %}">
+                        <input type="radio" name="size" id="sizeLarge" value="Large" data-size="large"
+                            autocomplete="off"> L
+                    </label>
+                    <label style="height: 4em;width: 3em;letter-spacing: 0;"
+                        class="btn btn-secondary {% if not p.xl_in_stock %}disabled{% endif %}">
+                        <input type="radio" name="size" id="sizeXL" value="Extra-Large" data-size="x-large"
+                            autocomplete="off"> XL
+                    </label>
+                </div>
+            </div>
+            <div class="qty_class">
+                <label for="">Quantity :</label>
+                <input type="number" value="1" name="" id="product-quantity" class="w-10 mb-20 quantity">
+            </div>
+
+            <div class="a-btn">
+                <input type="hidden" value="{{ p.Pid }}" class="product-id">
+                <input type="hidden" value="{{ p.name }}" class="product-name">
+                <button class="btn btn-secondary add-to-cart-btn" type="submit" id="add-to-cart-btn">Add to
+                    cart</button>
+            </div>
+            <div>
+                <h4 style="margin-top: 10px;">Description</h4>
+                <div class="des">
+                    <p>{{ p.description|safe }}</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <script>
+        const sizeButtons = document.querySelectorAll('input[type="radio"]');
+        const addToCartButton = document.querySelector('.add-to-cart-btn');
+
+        sizeButtons.forEach((button) => {
+            button.addEventListener('change', () => {
+                const selectedSize = document.querySelector('input[type="radio"]:checked');
+
+                // Enable or disable the "Add to cart" button based on the selected size's availability
+                if (selectedSize) {
+                    addToCartButton.disabled = false;
+                } else {
+                    addToCartButton.disabled = true;
+                }
+            });
+        });
+
+    </script>
+    <script>
+        var ProductImg = document.getElementById("ProductImg");
+        var SmallImg = document.getElementsByClassName("SmallImg");
+        SmallImg[0].onclick = function () {
+            ProductImg.src = SmallImg[0].src;
+        }
+        SmallImg[1].onclick = function () {
+            ProductImg.src = SmallImg[1].src;
+        }
+        SmallImg[2].onclick = function () {
+            ProductImg.src = SmallImg[2].src;
+        }
+        SmallImg[3].onclick = function () {
+            ProductImg.src = SmallImg[3].src;
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Store the original text of the "Add to cart" button
+            const originalButtonText = $("#add-to-cart-btn").text();
+
+            $("input[name='size']").on("click", function () {
+                let selectedSize = $("input[name='size']:checked").val();
+                console.log("Selected Size:", selectedSize);
+
+                // Reset the "Add to cart" button text when a different size is selected
+                $("#add-to-cart-btn").text(originalButtonText);
+            });
+
+            $("#add-to-cart-btn").on("click", function () {
+                let quantity = $("#product-quantity").val();
+                let product_name = $(".product-name").val();
+                let product_id = $(".product-id").val();
+                let product_price = $(".current-product-price").text();
+                let selectedSize = $("input[name='size']:checked").val();
+                let product_image = $("#ProductImg").attr("src");
+
+                let this_val = $(this);
+
+                console.log("Quantity", quantity);
+                console.log("Product_Name", product_name);
+                console.log("Product_Id", product_id);
+                console.log("Product_Price", product_price);
+                console.log("current_element :", this_val);
+                console.log("Selected Size:", selectedSize);
+                console.log("Product_Image", product_image);
+
+                $.ajax({
+                    url: '/add_to_cart',
+                    data: {
+                        'id': product_id,
+                        'qty': quantity,
+                        'name': product_name,
+                        'price': product_price,
+                        'size': selectedSize,
+                        'image': product_image,
+                    },
+                    dataType: 'json',
+                    beforeSend: function () {
+                        console.log("adding product");
+                        // Change the button text while the product is being added
+                        this_val.text("Adding to cart...");
+                    },
+                    success: function (response) {
+                        this_val.text("Added to cart"); // Restore the original button text
+                        console.log("added to cart");
+                        $(".cart-items-count").text(response.totalcartitems);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                        // Restore the original button text in case of an error
+                        this_val.text(originalButtonText);
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+<footer class="footer_x ">
+
+    <div class="text-center p-3" style="background-color:white;">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
+</footer>
+
+{% endblock content %}

@@ -1,0 +1,84 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %} 
+
+<body>
+    <script>
+        AOS.init({ once: true, });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    
+    <!--Taskbar-->
+
+    <section class="taskbar ">
+        <nav class="menu"  data-aos="flip-left" data-aos-duration="2000">
+            <a href="{% url 'uwapp:index' %}"><img src="{% static 'img/undrwrld final logo-03.png' %}" alt="">
+            </a>
+        </nav>
+        <nav class="menu_2">
+            <a href="{% url 'userauth:login'  %}">Login</a>
+            <a href="{% url 'uwapp:cart' %}"><img src="{% static 'img/cart.png' %}" alt=""></a>
+            <a  href="{% url 'uwapp:account' %}"><img src="{% static 'img/user.png' %}" alt=""></a>
+            <!-- Toogle -->
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarDark" aria-controls="offcanvasNavbarDark">
+                <img src="{% static 'img/menu.png' %}" alt="">
+            </button>
+
+            <!--sider-->
+            <div class="sidebar offcanvas offcanvas-end text-white" tabindex="-1" id="offcanvasNavbarDark"
+                aria-labelledby="offcanvasNavbarDarkLabel">
+                <div class="offcanvas-header text-white border-bottom">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">UndrWorld</h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <!--SIder body-->
+                <div class="offcanvas-body d-flex flex-column p-4">
+                    <ul class="navbar-nav justify-content-center align-items-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'uwapp:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:account' %}">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:category' %}">Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:product' %}">All Products</a>
+                        </li>
+                    </ul>
+                    <!--Log in / Signup-->
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                        <a href="{% url 'userauth:login'  %}">Login</a>
+                        <a href="{% url 'userauth:signup' %}" class="btn btn-primary">Signup</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <div class="center-screen">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="alert alert-danger text-center">
+                        <h1>Payment Failed</h1>
+                        <p>Your payment was not successful. Please try again.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<footer class="footer_x ">
+
+    <div class="text-center p-3" style="background-color: white;">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
+</footer>
+
+</html>
+
+
+{% endblock content %}

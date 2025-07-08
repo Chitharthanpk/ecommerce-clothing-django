@@ -1,0 +1,106 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<body>
+
+    <div class="container mt-5" id="contentToConvert">
+        <div class="row text-center">
+            <div class="col">
+                <!-- Add your logo here -->
+                <a href="{% url 'uwapp:index' %}"><img src="{% static 'img/undrwrld final logo-03.png' %}"
+                        alt="Your Logo" width="100"></a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col">
+                <h1>Invoice</h1>
+            </div>
+        </div>
+        <div class="content-box">
+            <div class="row">
+                <div class="col text-center">
+                    <p>{{ order_date }}</p>
+                    <p> {{ username }}, your order has been placed successfuly !</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <h2>Billing Details</h2>
+                    <p>{{ user_address.Address }}</p>
+                    <p>{{ user_phone_number }}</p>
+                    <p>{{ email }}</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_id, item in cart_data.items %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.size }}</td>
+                                <td>{{ item.qty }}</td>
+                                <td>Rs.{{ item.price }}</td>
+                                <td>Rs.{% widthratio item.price 1 item.qty %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <p>Total: Rs.{{ cart_total_amount|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 ">
+        <div class="col text-center ">
+            <button class="btn btn-primary mb-4" id="download">Download</button>
+            
+        </div>
+        <div class=" text-center mb-4 ">
+            <a href="{% url 'uwapp:index' %}"> Return to Homepage</a>
+        </div>
+    </div>
+
+
+
+    <script>
+        window.onload = function () {
+            document.getElementById("download")
+                .addEventListener("click", () => {
+                    const invoice = this.document.getElementById("contentToConvert");
+                    console.log(invoice);
+                    console.log(window);
+                    var opt = {
+                        margin: 0.2,
+                        filename: 'Invoice.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                    };
+                    html2pdf().from(invoice).set(opt).save();
+                })
+        }
+    </script>
+</body>
+<footer class="footer_x ">
+    <div class="text-center p-3" style="background-color: white;">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
+</footer>
+
+{% endblock content %}

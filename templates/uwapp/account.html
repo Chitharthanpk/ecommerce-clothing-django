@@ -1,0 +1,130 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<body>
+    <script> AOS.init({ once: true, });</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <!--taskbar-->
+
+    <section class="taskbar ">
+        <nav class="menu" data-aos="flip-left" data-aos-duration="2000">
+            <a href="{% url 'uwapp:index' %}"><img src="{% static 'img/undrwrld final logo-03.png' %}" alt="">
+            </a>
+        </nav>
+        <nav class="menu_2">
+            <a href="{% url 'userauth:login'  %}">Login</a>
+            <a href="{% url 'uwapp:cart' %}"><img src="{% static 'img/cart.png' %}" alt=""></a>
+            <a href="{% url 'uwapp:account' %}"><img src="{% static 'img/user.png' %}" alt=""></a>
+            <!-- Toogle -->
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarDark" aria-controls="offcanvasNavbarDark">
+                <img src="{% static 'img/menu.png' %}" alt="">
+            </button>
+
+            <!--sider-->
+            <div class="sidebar offcanvas offcanvas-end text-white" tabindex="-1" id="offcanvasNavbarDark"
+                aria-labelledby="offcanvasNavbarDarkLabel">
+                <div class="offcanvas-header text-white border-bottom">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">UndrWorld</h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <!--SIder body-->
+                <div class="offcanvas-body d-flex flex-column p-4">
+                    <ul class="navbar-nav justify-content-center align-items-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'uwapp:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:account' %}">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:category' %}">Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:product' %}">All Products</a>
+                        </li>
+                    </ul>
+                    <!--Log in / Signup-->
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                        <a href="{% url 'userauth:login'  %}">Login</a>
+                        <a href="{% url 'userauth:signup' %}" class="btn btn-primary">Signup</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+
+    <!--account_content-->
+
+    <section class="account-page">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-3">
+                    <!-- Sidebar -->
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action active">My Account</a>
+                        <a href="{% url 'uwapp:account' %}" class="list-group-item list-group-item-action">Profile</a>
+                        <a href="{% url 'uwapp:orders' %}" class="list-group-item list-group-item-action">Orders</a>
+                        <a href="{% url 'userauth:signout' %}" class="list-group-item list-group-item-action">Logout</a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <!-- Content Area -->
+                    <h1 class="">Welcome, {{ account.username }}</h1>
+                    <div class="card ard">
+                        <div class="card-body">
+                            <p class="card-text"><strong>Name:</strong> {{ account.username }}</p>
+                            <p class="card-text"><strong>Email:</strong> {{ account.email }}</p>
+                    
+                            {% if existing_phone %}
+                                <p class="card-text"><strong>Phone:</strong> {{ existing_phone }}</p>
+                            {% else %}
+                                <p class="card-text"><strong>Phone:</strong></p>
+                            {% endif %}
+                    
+                            {% if existing_address %}
+                                <p class="card-text"><strong>Address:</strong> {{ existing_address.Address }}</p>
+                            {% else %}
+                                <p class="card-text"><strong>Address:</strong></p>
+                            {% endif %}
+                            <!-- Add more user details as needed -->
+                        </div>
+                    </div>
+                    
+                       
+                </div>
+                <div class="col-lg-4">
+                    <div class="card ard mt-4">
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="{{ existing_address.Address }}" required>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="zip">Phone</label>
+                                    <input type="tel" class="form-control" id="zip" name="phone" placeholder="{{ existing_phone }}" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-4" id="saveAddress">Update</button>
+                            </form>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        </main>
+    </section>
+</body>
+<footer class="footer_x ">
+
+    <div class="text-center p-3" style="background-color: white;">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
+</footer>
+
+</html>
+{% endblock content %}
