@@ -30,7 +30,4 @@ A full-featured e-commerce platform built with **Django**, featuring product cat
 **Deployment**: Render.com  
 **Others**: SMTP Email, Pagination, Custom Middleware
 
----
-
-## 🗂️ Project Structure
 
