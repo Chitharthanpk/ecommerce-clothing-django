@@ -1,0 +1,189 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<body>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <section class="taskbar ">
+        <nav class="menu" data-aos="flip-left" data-aos-duration="2000">
+            <a href="{% url 'uwapp:index' %}"><img src="{% static 'img/undrwrld final logo-03.png' %}" alt="">
+            </a>
+        </nav>
+        <nav class="menu_2">
+            <a href="{% url 'userauth:login'  %}">Login</a>
+            <a href="{% url 'uwapp:cart' %}"><img src="{% static 'img/cart.png' %}" alt=""></a>
+            <a href="{% url 'uwapp:account' %}"><img src="{% static 'img/user.png' %}" alt=""></a>
+            <!-- Toogle -->
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarDark" aria-controls="offcanvasNavbarDark">
+                <img src="{% static 'img/menu.png' %}" alt="">
+            </button>
+
+            <!--sider-->
+            <div class="sidebar offcanvas offcanvas-end text-white" tabindex="-1" id="offcanvasNavbarDark"
+                aria-labelledby="offcanvasNavbarDarkLabel">
+                <div class="offcanvas-header text-white border-bottom">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">UndrWorld</h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <!--SIder body-->
+                <div class="offcanvas-body d-flex flex-column p-4">
+                    <ul class="navbar-nav justify-content-center align-items-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'uwapp:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:account' %}">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:category' %}">Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'uwapp:product' %}">All Products</a>
+                        </li>
+                    </ul>
+                    <!--Log in / Signup-->
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                        <a href="{% url 'userauth:login'  %}">Login</a>
+                        <a href="{% url 'userauth:signup' %}" class="btn btn-primary">Signup</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section class="checkoutform">
+
+        <body class="bg-light">
+            <div class="container">
+                <div class="pb-5 text-center">
+                    <h2>Checkout form</h2>
+                    <p class="lead">Checkout with confidence! Your info is our best-kept secret</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 order-md-2 mb-4">
+                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Your cart</span>
+                            <span class="badge badge-primary badge-pill"
+                                style=" background-color: blue;">{{totalcartitems }}</span>
+                        </h4>
+                        <ul class="list-group mb-3">
+
+                            {% for product_id, item in cart_data.items %}
+
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">{{ item.name }}</h6>
+                                    <small class="text-muted"></small>
+                                </div>
+                                <span class="text-muted">{{ item.qty }} * {{ item.price }}</span>
+                            </li>
+
+                            {% endfor %}
+
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Total (Rs)</span>
+                                <strong>{{ cart_total_amount|floatformat:2 }}</strong>
+                            </li>
+
+                        </ul>
+
+                        <!-- Only Razorpay payment method -->
+                        <h4 class="mb-1 ">Payment</h4>
+                            <div class="custom-control custom-radio"><label class="custom-control-label mb-3">Continue with billing and shipping</label></div>
+                            <button id="rzp-button1" type="submit" class="btn btn-success">Pay RS.{{cart_total_amount|floatformat:2 }}</button>
+                        <form action="{ url 'uwapp:payment_success' }" method="post">
+                            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                            <script>
+                                var options = {
+                                    "key": "rzp_test_LlioESc6kLLlx0",
+                                    "amount": "{{ AMOUNT }}",
+                                    "currency": "INR",
+                                    "name": "UndrWorld",
+                                    "description": "Test Transaction",
+                                    "image": "{% static 'img/undrwrld final logo-03.png' %}",
+                                    "order_id": "{{ id }}",
+                                    "callback_url": "http://127.0.0.1:8000/payment/success/",
+                                    "prefill": {
+                                        "name": "{{ username }}",
+                                        "email": "{{ email }}",
+                                    },
+                                    "notes": {
+                                        "address": "Razorpay Corporate Office"
+                                    },
+                                    "theme": {
+                                        "color": "#3399cc"
+                                    }
+                                };
+                                var rzp1 = new Razorpay(options);
+                                document.getElementById('rzp-button1').onclick = function (e) {
+                                    rzp1.open();
+                                    e.preventDefault();
+                                }
+                            </script>
+                        </form>
+                    </div>
+                    <div class="col-md-8 order-md-1">
+                        <h4 class="mb-3">Billing address</h4>
+                        <form class="needs-validation">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="firstName">First name</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder=""
+                                        value="{{ username }}" readonly required>
+                                    <div class="invalid-feedback">
+                                        Valid first name is required.
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="zip">Phone</label>
+                                    <input type="tel" class="form-control" id="state" placeholder="" value="{{ phone }}" required>
+                                    <div class="invalid-feedback">
+                                        Phone Number required
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-11 mb-3">
+                                <label for="email">Email <span class="text-muted">(required)</span></label>
+                                <input type="email" class="form-control" id="email" placeholder="you@example.com"
+                                    value="{{ email }}" readonly required>
+                                <div class="invalid-feedback">
+                                    Please enter a valid email address for shipping updates.
+                                </div>
+                            </div>
+
+                            <div class="col-md-11 mb-3">
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control" id="address" placeholder="1234 Main St" value="{{ address }}" required>
+                                <div class="invalid-feedback">
+                                    Please enter your shipping address.
+                                </div>
+                            </div>
+                            <div class="col-md-11 mb-3">
+                                <p ><span class="text-danger"><strong>*</strong></span> Update your billing details in your<a href="{% url 'uwapp:account' %}" class="text-primary"> account page </a></p>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
+    </section>
+</body>
+
+<footer class="footer_x ">
+
+    <div class="text-center p-3" style="background-color: white;">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
+</footer>
+
+</html>
+
+{% endblock content %}
